@@ -3,7 +3,7 @@ return {
   event = "VeryLazy",
   init = function()
     vim.o.timeout = true
-    vim.o.timeoutlen = 300 -- Wait 300ms before showing the popup
+    vim.o.timeoutlen = 500 -- Wait 300ms before showing the popup
   end,
   opts = {
     preset = "helix",
@@ -15,8 +15,6 @@ return {
       { "<leader>s", group = "Search" },
       { "<leader>w", group = "Window" },
       { "<leader>c", group = "Code" },
-
-      -- Examples of grouping generic prefixes if you have them:
       { "[", group = "Prev" },
       { "]", group = "Next" },
       { "g", group = "Goto" },

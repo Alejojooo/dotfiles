@@ -69,8 +69,14 @@ return {
   },
   {
     "saghen/blink.cmp",
+    dependencies = {
+      "rafamadriz/friendly-snippets"
+    },
     version = "*",
     opts = {
+      snippets = {
+        preset = "default",
+      },
       keymap = {
         preset = "none",
         ["<Tab>"] = { "select_next", "snippet_forward", "fallback" },
@@ -82,7 +88,6 @@ return {
       },
       appearance = {
         use_nvim_cmp_as_default = true,
-        -- nerd_font_variant = "mono",
       },
       completion = {
         menu = { auto_show = true },

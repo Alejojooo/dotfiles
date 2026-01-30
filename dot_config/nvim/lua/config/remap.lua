@@ -77,4 +77,10 @@ keymap("n", "<leader>gg", function() Snacks.lazygit() end, { desc = "Lazygit" })
 keymap("n", "<leader>z", "<cmd>ZenMode<CR>", { desc = "Zen Mode" })
 
 -- Others
-keymap("n", "<C-f>", ":%s/", { desc = "Search" })
+keymap({ "n", "v", "x" }, "<A-z>", function()
+  if vim.opt.wrap then
+    vim.opt.wrap = false
+    return
+  end
+  vim.opt.wrap = true
+end, { desc = "Toggle line wrap" })

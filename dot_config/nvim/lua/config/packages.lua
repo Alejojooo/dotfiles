@@ -41,14 +41,12 @@ local parsers = {
 local linters = {
   "eslint_d",
   "jsonlint",
-  "markdownlint",
 }
 
 local linters_by_ft = {
   astro = { "eslint_d" },
   javascript = { "eslint_d" },
   json = { "jsonlint" },
-  markdown = { "markdownlint" },
   typescript = { "eslint_d" },
   typescriptreact = { "eslint_d" },
   yaml = { "eslint_d" },
