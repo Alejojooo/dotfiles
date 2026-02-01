@@ -5,6 +5,7 @@ local lsp_servers = {
   "jsonls",
   "lua_ls",
   "markdown_oxide",
+  "sqlls",
   "tailwindcss",
   "ts_ls",
   "yamlls",
@@ -28,6 +29,8 @@ local parsers = {
   "printf",
   "python",
   "query",
+  "sql",
+  "sqlite",
   "regex",
   "toml",
   "tsx",
@@ -41,12 +44,14 @@ local parsers = {
 local linters = {
   "eslint_d",
   "jsonlint",
+  "sqlfluff",
 }
 
 local linters_by_ft = {
   astro = { "eslint_d" },
   javascript = { "eslint_d" },
   json = { "jsonlint" },
+  sql = { "sqlfluff" },
   typescript = { "eslint_d" },
   typescriptreact = { "eslint_d" },
   yaml = { "eslint_d" },
@@ -54,6 +59,7 @@ local linters_by_ft = {
 
 local formatters = {
   "prettierd",
+  "sleek",
   "stylua",
 }
 
@@ -64,6 +70,7 @@ local formatters_by_ft = {
   javascript = { "prettierd" },
   json = { "prettierd" },
   lua = { "stylua" },
+  sql = { "sleek" },
   typescript = { "prettierd" },
   typescriptreact = { "prettierd" },
   yaml = { "prettierd" },

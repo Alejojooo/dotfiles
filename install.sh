@@ -50,6 +50,7 @@ eval "$(mise activate bash)"
 echo "📦 Installing Language Runtimes..."
 # Add here more languages as needed
 mise use --global node@lts
+mise use --global rust
 mise use --global usage
 
 # --- 5. Install Bitwarden CLI via npm ---
