@@ -30,7 +30,6 @@ local parsers = {
   "python",
   "query",
   "sql",
-  "sqlite",
   "regex",
   "toml",
   "tsx",
