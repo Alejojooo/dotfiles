@@ -2,58 +2,38 @@ return {
   {
     "nvim-treesitter/nvim-treesitter",
     lazy = false,
-    event = { "BufRead" },
     branch = "main",
     build = ":TSUpdate",
-    opts = {
-      ensure_installed = require("config.packages").parsers,
-    },
-    config = function(_, opts)
-      -- Manual installation
+    config = function()
       local ts = require("nvim-treesitter")
-      local ensure_installed = require("config.packages").parsers
-      local already_installed = ts.get_installed()
-      local to_install = vim.iter(ensure_installed)
-        :filter(function(parser)
-          return not vim.tbl_contains(already_installed, parser)
-        end)
-        :totable()
+      local parsers = require("config.packages").parsers
 
-      if #to_install > 0 then
-        vim.notify("Installing Treesitter parsers...", vim.log.levels.INFO)
-        ts.install(to_install)
-      end
+      ts.setup({ install_dir = vim.fn.stdpath("data") .. "/site" })
+      ts.install(parsers)
 
-      -- Enable features
       vim.api.nvim_create_autocmd("FileType", {
-        group = vim.api.nvim_create_augroup("NativeTreesitter", { clear = true }),
+        group = vim.api.nvim_create_augroup("nvim-treesitter", { clear = true }),
         pattern = "*",
-        callback = function()
+        callback = function(args)
           local ok = pcall(vim.treesitter.start)
 
-          -- If Treesitter started successfully, enable the other features:
           if ok then
-            -- Indentation
-            vim.bo.indentexpr = "v:lua.require'nvim-treesitter'.indentexpr()"
+            local winid = vim.api.nvim_get_current_win()
+            vim.wo[winid].foldmethod = "expr"
+            vim.wo[winid].foldexpr = "v:lua.vim.treesitter.foldexpr()"
+            vim.wo[winid].foldlevel = 99
 
-            -- Folding
-            vim.opt_local.foldmethod = "expr"
-            vim.opt_local.foldexpr = "v:lua.vim.treesitter.foldexpr()"
-            vim.opt_local.foldlevel = 99
-            vim.opt_local.foldlevelstart = 99
+            vim.bo[args.buf].indentexpr = "v:lua.require'nvim-treesitter'.indentexpr()"
           end
-        end,
+        end
       })
-    end,
+    end
   },
   {
     "WhoIsSethDaniel/mason-tool-installer.nvim",
     dependencies = { "williamboman/mason.nvim" },
     opts = {
-      ensure_installed = vim.list_extend(
-        require("config.packages").formatters,
-        require("config.packages").linters
-      ),
+      ensure_installed = vim.list_extend(require("config.packages").formatters, require("config.packages").linters),
       auto_update = true,
       run_on_start = true,
     },
