@@ -12,16 +12,16 @@ sudo dnf copr enable -y wezfurlong/wezterm-nightly
 echo "📦 Installing System Tools..."
 
 # Install all system packages in one go:
-# - build tools: gcc-c++, make, etc. (for compiling treesitter/mason tools)
+# - build tools: gcc-c++, make, clang
 # - utilities: unzip, ripgrep (for grug-far), wl-clipboard (neovim clipboard)
 # - shell: zsh, util-linux-user (chsh), bat
 # - archive tools: p7zip, p7zip-plugins
 # - core tools: git, chezmoi, mise, wezterm
 sudo dnf install -y \
-    gcc-c++ make unzip ripgrep wl-clipboard git \
+    gcc-c++ make clang unzip ripgrep wl-clipboard \
     zsh util-linux-user bat \
     p7zip p7zip-plugins \
-    chezmoi mise wezterm
+    git chezmoi mise wezterm
 
 # --- 2. Install Fonts ---
 FONT_DIR="$HOME/.local/share/fonts"
@@ -42,7 +42,6 @@ else
 fi
 
 # --- 3. Activate mise ---
-# Since we installed via dnf, 'mise' is in the global PATH.
 # We activate it for this script session so we can use 'mise use/x'.
 eval "$(mise activate bash)"
 
@@ -53,14 +52,9 @@ mise use --global node@lts
 mise use --global rust
 mise use --global usage
 
-# --- 5. Install Bitwarden CLI via npm ---
-# We use 'mise x' to ensure we are using the Node version we just installed
-if ! command -v bw &> /dev/null; then
-    echo "📦 Installing Bitwarden CLI..."
-    mise x -- npm install -g @bitwarden/cli
-else
-    echo "✅ Bitwarden CLI is already installed."
-fi
+# --- 5. Install Global NPM Packages ---
+echo "📦 Installing Global NPM Packages (Bitwarden & Tree-sitter)..."
+mise x -- npm install -g @bitwarden/cli tree-sitter-cli
 
 # --- 6. Install Oh-My-Zsh (Unattended) ---
 OMZ_DIR="$HOME/.oh-my-zsh"
@@ -93,7 +87,6 @@ install_plugin "https://github.com/MichaelAquilina/zsh-you-should-use" "you-shou
 install_plugin "https://github.com/fdellwing/zsh-bat" "zsh-bat"
 
 # --- 8. Initialize Chezmoi ---
-# Initialize chezmoi with your repo if the destination directory doesn't exist
 if [ ! -d "$HOME/.local/share/chezmoi" ]; then
     echo "📂 Initializing chezmoi..."
     chezmoi init https://github.com/Alejojooo/dotfiles.git
@@ -132,7 +125,7 @@ CURRENT_SHELL=$(grep "^$USER" /etc/passwd | cut -d: -f7)
 TARGET_SHELL=$(command -v zsh)
 
 if [ "$CURRENT_SHELL" != "$TARGET_SHELL" ]; then
-    echo "🐚 Changing default shell to Zsh (requires password)..."
+    echo "🐚 Changing default shell to Zsh"
     chsh -s "$TARGET_SHELL"
 fi
 
@@ -141,7 +134,7 @@ fi
 # Headless run to let Lazy install everything and quit
 if command -v nvim &> /dev/null; then
     echo "💤 Syncing Neovim Plugins..."
-    nvim --headless "+Lazy! sync" +qa
+    nvim --headless "+Lazy! sync" "+TSUpdate" +qa
 fi
 
 echo "🎉 Done! Restart your terminal to see changes."
