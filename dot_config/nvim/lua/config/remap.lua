@@ -24,12 +24,11 @@ keymap("n", "<C-k>", "<C-w>k", { desc = "Move to left window" })
 keymap("n", "<C-l>", "<C-w>l", { desc = "Move to right window" })
 
 -- Buffers
--- stylua: ignore start
 keymap("n", "<leader>bd", function() Snacks.bufdelete() end, { desc = "Delete buffer" })
 keymap("n", "<leader>bo", function() Snacks.bufdelete.other() end, { desc = "Delete other buffers" })
--- stylua: ignore end
 keymap("n", "<S-h>", ":bnext<CR>", { desc = "Next buffer" })
 keymap("n", "<S-l>", ":bprevious<CR>", { desc = "Previous buffer" })
+keymap("n", "<leader>bm", "<cmd>buffers +<CR>", { desc = "List modified buffers" })
 
 -- Stay in indent mode
 keymap("v", "<", "<gv")
@@ -44,11 +43,12 @@ keymap("v", "<A-j>", ":<C-u>execute \"'<,'>move '>+\" . v:count1<cr>gv=gv", { de
 keymap("v", "<A-k>", ":<C-u>execute \"'<,'>move '<-\" . (v:count1 + 1)<cr>gv=gv", { desc = "Move line up" })
 
 -- Files
-keymap("n", "<leader>fn", "<cmd>enew<CR>", { desc = "New File" })
-keymap("n", "<leader>fs", "<cmd>write<CR>", { desc = "Save File" })
-keymap({ "i", "x", "n", "s" }, "<C-s>", "<cmd>w<cr><esc>", { desc = "Save file" })
-keymap("n", "<leader>fu", "<cmd>edit!<CR>", { desc = "Undo All Changes in File" })
-keymap("n", "<F2>", vim.lsp.buf.rename, { desc = "Power Rename"})
+keymap("n", "<leader>fn", "<cmd>enew<CR>", { desc = "New file" })
+keymap("n", "<leader>fs", "<cmd>write<CR>", { desc = "Save file" })
+keymap("n", "<leader>fu", "<cmd>edit!<CR>", { desc = "Undo changes in file" })
+
+-- Code
+keymap("n", "<leader>cr", vim.lsp.buf.rename, { desc = "Rename" })
 
 -- Clear search and stop snippet on escape
 keymap({ "i", "n", "s" }, "<esc>", function()
@@ -57,25 +57,27 @@ keymap({ "i", "n", "s" }, "<esc>", function()
 end, { expr = true, desc = "Escape and clear hlsearch" })
 
 -- Diagnostic
--- stylua: ignore start
 vim.keymap.set("n", "gl", vim.diagnostic.open_float, { desc = "Show line diagnostics" })
-vim.keymap.set("n", "<leader>xx", function() Snacks.picker.diagnostics_buffer() end, { desc = "Buffer Diagnostics" })
-vim.keymap.set("n", "<leader>xX", function() Snacks.picker.diagnostics() end, { desc = "Workspace Diagnostics" })
-vim.keymap.set("n", "]d", vim.diagnostic.goto_next, { desc = "Next Diagnostic" })
-vim.keymap.set("n", "[d", vim.diagnostic.goto_prev, { desc = "Prev Diagnostic" })
--- stylua: ignore end
+vim.keymap.set("n", "]d", vim.diagnostic.goto_next, { desc = "Next diagnostic" })
+vim.keymap.set("n", "[d", vim.diagnostic.goto_prev, { desc = "Prev diagnostic" })
 
--- Others
-
--- Lazygit
--- stylua: ignore
+-- Git
 keymap("n", "<leader>gg", function() Snacks.lazygit() end, { desc = "Lazygit" })
 
--- Toggle line wrap
-keymap({ "n", "v", "x" }, "<A-z>", function()
-  if vim.opt.wrap then
-    vim.opt.wrap = false
-    return
-  end
-  vim.opt.wrap = true
-end, { desc = "Toggle line wrap" })
+-- UI
+keymap(
+  "n",
+  "<leader>uw",
+  function()
+    if vim.opt.wrap then
+      vim.opt.wrap = false
+      return
+    end
+    vim.opt.wrap = true
+  end,
+  { desc = "Toggle line wrap" }
+)
+
+-- Session
+keymap("n", "<leader>qq", "<cmd>quit<CR>", { desc = "Quit" })
+keymap("n", "<leader>qQ", "<cmd>quit!<CR>", { desc = "Quit without saving" })
