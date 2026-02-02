@@ -7,7 +7,7 @@ return {
         require("grug-far").open({ transient = true })
       end,
       mode = { "n", "v" },
-      desc = "Search and Replace",
+      desc = "Search and replace",
     },
   },
 }
